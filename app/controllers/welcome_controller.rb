@@ -13,14 +13,11 @@ class WelcomeController < ApplicationController
     @parsed = g.body
     # pagination
     p = JSON.parse getPages(g.headers["Link"])
-    puts g.headers["Link"]
-    #puts p.inspect
     @current_page = params[:id].nil? ? 1 : params[:id]
     @next_page = p["next"].nil? ? 1 : p["next"]
     @last_page = p["last"].nil? ? 0 : p["last"]
     @first_page = p["first"].nil? ? 0 : p["first"]
     @prev_page = p["prev"].nil? ? @last_page : p["prev"]
-    puts @current_page
   end
 
   def categories_home
@@ -44,7 +41,6 @@ class WelcomeController < ApplicationController
     if @s != nil and @s != "No word"
       gh = Ghee.access_token(TOKEN["access_token"])
       g = gh.gists.user(@s, @info)
-      puts g.body
       @h = g.headers
       @parsed = g.body
     end
