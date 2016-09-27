@@ -27,6 +27,19 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+gem 'bootstrap-sass', '~> 3.3.7'
+gem 'faraday', '~> 0.9.2'
+gem 'faraday_middleware', '~> 0.10.0'
+gem 'hashie'
+gem 'multi_json'
+gem 'typhoeus'
+gem 'time_ago_in_words'
+gem 'nokogiri'
+gem 'jsonify'
+gem 'json'
+gem 'rest-client', '~> 2.0.0'
+
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
