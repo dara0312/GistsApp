@@ -15,6 +15,7 @@ Rails 5.0.0.1
 * Library added
 
 Ghee ~> 0.15.22
+
 This library has been modified for gotting headers and body request response [Gists API](https://developer.github.com/v3/gists/).
 
 ## Getting Started
