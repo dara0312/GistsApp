@@ -16,17 +16,17 @@ This library has been modified for gotting headers and body request response [Gi
 
 ## Getting Started
 
-1. Run `bundle install`
+1- Run `bundle install`
 ```bash
 bundle install
 ```
-2. Add your `access_token` in `config/gists.yml`
+2- Add your `access_token` in `config/gists.yml`
 ``` yaml
 development:
   access_token: 54f5e4f54ef54e5f4e54f5e4f5e
 ```
-3. Start Rails server
+3- Start Rails server
 ```bash
 rails s
 ```
-4. Visit [localhost:3000](localhost:3000)
+4- Visit [localhost:3000](localhost:3000)
