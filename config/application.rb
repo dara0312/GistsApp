@@ -6,6 +6,10 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# load Ghee library
+$:.unshift(File.expand_path("../../lib", __FILE__))
+require 'ghee'
+
 module GistsApp
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

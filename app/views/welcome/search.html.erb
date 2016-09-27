@@ -1,0 +1,146 @@
+<% provide(:title, "Recherche") %>
+
+<h2 class="title"><%= yield :title %> <% if @h %> <small class="rate_limit"> Rate Limit : <%= @h["x-ratelimit-remaining"] %> / <%= @h["x-ratelimit-limit"] %></small> <% end %> </h2>
+
+<form method="post" class="form-inline">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <%= hidden_field_tag :info, "gists" %>
+  <div class="form-group">
+    <input type="text" name="s" class="form-control" id="search" placeholder="Recherche" />
+  </div>
+  <input type="submit" value="Recherche" class="btn btn-primary" />
+</form>
+<br/>
+
+<% if @s != nil and @parsed != nil %>
+<h4><i>Résultat trouvé pour <%= @s %> sur <%= @info %>: </i></h4>
+<br/>
+
+<div class="container-fluid">
+
+<div class="row row-offcanvas row-offcanvas-right">
+
+  <div class="col-xs-15 col-sm-10">
+
+  <% if @parsed.length == 0 %>
+    <div class="alert alert-warning" role="alert">
+      <strong>Warning!</strong> No gists data.
+    </div>
+  <% end %>
+
+  <% if @info == "gists" %>
+    <% @parsed.each do |p| %>
+      <% p["files"].each do |key, val| %>
+        <div class="media">
+
+          <div class="media-left">
+            <%= link_to p["owner"].nil? ? p["html_url"] : p["owner"]["html_url"] do %>
+              <%= image_tag p["owner"].nil? ? "gravatar.png" : p["owner"]["avatar_url"], size: "26x26", class: "media-object"  %>
+            <% end %>
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading"><%= p["owner"].nil? ? link_to("Anonymous", p["html_url"], class: "anonymous") : link_to(p["owner"]["login"], p["owner"]["html_url"]) %> / <a href="<%= p["html_url"] %>"><%= key %></a></h4>
+            <p class="gtimes">Created <% d = DateTime.parse(p["created_at"]) %> <%= Time.local(d.year, d.mon, d.mday, d.hour, d.min, d.sec).ago_in_words %></p>
+            <span class="description" data-toggle="tooltip" data-placement="top" title="<%= p["description"] %>"><%= truncate(p["description"], :length => 100) %></span>
+            <blockquote class="blockquote">
+              <code><a href="<%= p["files"][key]["raw_url"] %>"><%= p["files"][key]["raw_url"] %></a></code>
+              <footer class="blockquote-footer">
+                <cite title="Source Title">
+                  <a href="<%= p["comments_url"] %>" class="comments">
+                    <svg aria-hidden="true" class="octicon" height="16" version="1.1" viewBox="0 0 16 16" width="16">
+                      <path d="M14 1H2c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2v3.5L7.5 11H14c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zm0 9H7l-2 2v-2H2V2h12v8z"></path>
+                    </svg>
+                    <%= p["comments"] %> <%= p["comments"].to_i > 1 ? "Comments" : "Comment" %>
+                  </a>
+                </cite>
+              </footer>
+            </blockquote>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% elsif @info == "following" or @info == "followers" %>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="thead-default">
+        <tr>
+          <th>#</th>
+          <th>ID</th>
+          <th>LOGIN</th>
+          <th>AVATAR</th>
+          <th>LIEN GITHUB</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% i = 0 %>
+        <% @parsed.each do |key, value| %>
+          <tr>
+            <th scope="row"><%= i %></th>
+            <td><%= key["id"] %></td>
+            <td><%= key["login"] %></td>
+            <td><%= image_tag key["avatar_url"], size: "26x26", class: "media-object"  %></td>
+            <td><%= link_to key["html_url"], key["html_url"] %></td>
+          </tr>
+          <% i = i + 1 %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="thead-default">
+          <tr>
+            <th>#</th>
+            <th>Id</td>
+            <th>Count</td>
+            <th>Fullname</td>
+            <% if @info == "starred" or @info == "orgs" %>
+            <th>Id Login</th>
+            <th>Login</th>
+            <th>Avatar</th>
+            <th>Lien Github</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% i = 0 %>
+          <% @parsed.each do |key, value| %>
+            <tr>
+              <th scope="row"><%= i %></th>
+              <td><%= key["id"] %></td>
+              <td><%= key["stargazers_count"] %></td>
+              <td><%= link_to key["name"], key["html_url"] %></td>
+              <% if @info == "starred" or @info == "orgs" %>
+              <td><%= key["owner"]["id"] %></td>
+              <td><%= key["owner"]["login"] %></td>
+              <td><%= image_tag key["owner"]["avatar_url"], size: "26x26", class: "media-object"  %></td>
+              <td><%= link_to key["owner"]["html_url"], key["owner"]["html_url"] %></td>
+              <% end %>
+            </tr>
+            <% i = i + 1 %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+  <% end%>
+
+</div>
+
+<div class="col-xs-3 col-sm-2 sidebar-offcanvas" id="sidebar">
+  <div class="list-group">
+    <%= @info == "gists" ? link_to("Gists", "?info=gists&w=#{@s}", class: "list-group-item active") : link_to("Gists", "?info=gists&w=#{@s}", class: "list-group-item")  %>
+    <%= @info == "followers" ? link_to("Followers", "?info=followers&w=#{@s}", class: "list-group-item active") : link_to("Followers", "?info=followers&w=#{@s}", class: "list-group-item") %>
+    <%= @info == "following" ? link_to("Following", "?info=following&w=#{@s}", class: "list-group-item active") : link_to("Following", "?info=following&w=#{@s}", class: "list-group-item") %>
+    <%= @info == "starred" ? link_to("Starred", "?info=starred&w=#{@s}", class: "list-group-item active") : link_to("Starred", "?info=starred&w=#{@s}", class: "list-group-item")  %>
+    <%= @info == "subscriptions" ? link_to("Subscriptions", "?info=subscriptions&w=#{@s}", class: "list-group-item active") : link_to("Subscriptions", "?info=subscriptions&w=#{@s}", class: "list-group-item") %>
+    <%= @info == "orgs" ? link_to("Organizations", "?info=orgs&w=#{@s}", class: "list-group-item active") : link_to("Organizations", "?info=orgs&w=#{@s}", class: "list-group-item") %>
+    <%= @info == "repos" ? link_to("Repository", "?info=repos&w=#{@s}", class: "list-group-item active") : link_to("Repository", "?info=repos&w=#{@s}", class: "list-group-item") %>
+  </div>
+</div>
+
+</div>
+
+</div>
+<% end %>

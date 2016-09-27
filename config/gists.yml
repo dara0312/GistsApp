@@ -1,0 +1,8 @@
+development:
+  access_token: 006176755813f085fa7b7da97e711c04eee46e2e
+
+test:
+  access_token: 006176755813f085fa7b7da97e711c04eee46e2e
+
+production:
+  access_token: <%= ENV["SECRET_ACCESS_TOKEN"] %>

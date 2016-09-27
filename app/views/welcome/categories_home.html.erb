@@ -1,0 +1,18 @@
+<% provide(:title, "Catégories") %>
+
+<h2 class="title"><%= yield :title %> </h2>
+
+<div class="row">
+
+  <div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar">
+      <li><%= link_to "Starred", categorieshome_path() + "/starred" %></li>
+      <li><%= link_to "Forked", categorieshome_path() + "/forked" %></li>
+    </ul>
+  </div>
+
+  <div class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 main">
+    <%= image_tag "bac.jpg", size: "150x30", id: "logo" %>
+  </div>
+
+</div>
